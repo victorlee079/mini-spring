@@ -1,20 +1,26 @@
 package com.vitor.minispring.test.bean;
 
 public class UserService {
-	private String name;
-
-	public UserService(String name) {
-		this.name = name;
-	}
+	private String uid;
+	private UserDao userDao;
 
 	public void queryUserInfo() {
-		System.out.println("Query User Info: " + name);
+		System.out.println("Query User Info: " + userDao.queryUserName(uid));
 	}
 
-	@Override
-	public String toString() {
-		final StringBuilder sb = new StringBuilder();
-		sb.append(name);
-		return sb.toString();
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public UserDao getUserDao() {
+		return userDao;
+	}
+
+	public void setUserDao(UserDao userDao) {
+		this.userDao = userDao;
 	}
 }

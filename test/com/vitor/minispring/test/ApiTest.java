@@ -1,22 +1,32 @@
 package com.vitor.minispring.test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.Test;
 
+import com.vitor.minispring.beans.PropertyValue;
+import com.vitor.minispring.beans.PropertyValues;
 import com.vitor.minispring.beans.factory.config.BeanDefinition;
+import com.vitor.minispring.beans.factory.config.BeanReference;
 import com.vitor.minispring.beans.factory.support.DefaultListableBeanFactory;
+import com.vitor.minispring.test.bean.UserDao;
 import com.vitor.minispring.test.bean.UserService;
 
 public class ApiTest {
 	@Test
 	public void test_BeanFactory() {
-		String beanName = "userService";
+		String userDaoName = "userDao";
+		String userServiceName = "userService";
+
 		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
-		BeanDefinition beanDefinition = new BeanDefinition(UserService.class);
-		beanFactory.registerBeanDefinition(beanName, beanDefinition);
-		UserService userService = (UserService) beanFactory.getBean(beanName, "vitor");
+
+		beanFactory.registerBeanDefinition(userDaoName, new BeanDefinition(UserDao.class));
+
+		PropertyValues propertyValues = new PropertyValues();
+		propertyValues.addPropertyValue(new PropertyValue("uid", "10002"));
+		propertyValues.addPropertyValue(new PropertyValue(userDaoName, new BeanReference(userDaoName)));
+
+		beanFactory.registerBeanDefinition(userServiceName, new BeanDefinition(UserService.class, propertyValues));
+
+		UserService userService = (UserService) beanFactory.getBean(userServiceName);
 		userService.queryUserInfo();
-		assertEquals(userService, beanFactory.getSingleton(beanName));
 	}
 }
