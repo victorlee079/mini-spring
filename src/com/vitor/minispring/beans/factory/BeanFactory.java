@@ -1,5 +1,10 @@
 package com.vitor.minispring.beans.factory;
 
+import com.vitor.minispring.beans.BeansException;
+
 public interface BeanFactory {
-	public Object getBean(String beanName);
+
+	Object getBean(String beanName) throws BeansException;
+
+	Object getBean(String beanName, Object... args) throws BeansException;
 }

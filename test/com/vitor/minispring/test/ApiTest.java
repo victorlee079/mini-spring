@@ -15,7 +15,7 @@ public class ApiTest {
 		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 		BeanDefinition beanDefinition = new BeanDefinition(UserService.class);
 		beanFactory.registerBeanDefinition(beanName, beanDefinition);
-		UserService userService = (UserService) beanFactory.getBean(beanName);
+		UserService userService = (UserService) beanFactory.getBean(beanName, "vitor");
 		userService.queryUserInfo();
 		assertEquals(userService, beanFactory.getSingleton(beanName));
 	}
