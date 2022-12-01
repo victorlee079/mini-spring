@@ -1,19 +1,19 @@
 package com.vitor.minispring.test.bean;
 
 public class UserService {
-	private String uid;
+	private String uId;
 	private UserDao userDao;
 
 	public void queryUserInfo() {
-		System.out.println("Query User Info: " + userDao.queryUserName(uid));
+		System.out.println("Query User Info: " + userDao.queryUserName(uId));
 	}
 
-	public String getUid() {
-		return uid;
+	public String getUId() {
+		return uId;
 	}
 
-	public void setUid(String uid) {
-		this.uid = uid;
+	public void setUId(String uId) {
+		this.uId = uId;
 	}
 
 	public UserDao getUserDao() {

@@ -6,11 +6,13 @@ import com.vitor.minispring.beans.BeansException;
 import com.vitor.minispring.beans.PropertyValue;
 import com.vitor.minispring.beans.PropertyValues;
 import com.vitor.minispring.beans.factory.config.BeanDefinition;
+import com.vitor.minispring.beans.factory.config.BeanPostProcessor;
 import com.vitor.minispring.beans.factory.config.BeanReference;
 
 import cn.hutool.core.bean.BeanUtil;
 
-public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory {
+public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory
+		implements AutowireCapableBeanFactory {
 	private InstantiationStrategy instantiationStrategy = new CglibSubclassingInstantiationStrategy();
 
 	@Override
@@ -38,7 +40,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					BeanReference beanReference = (BeanReference) value;
 					value = getBean(beanReference.getBeanName());
 				}
-				
+
 				// From hutool
 				BeanUtil.setFieldValue(bean, name, value);
 			}
@@ -67,5 +69,31 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 	public void setInstantiationStrategy(InstantiationStrategy instantiationStrategy) {
 		this.instantiationStrategy = instantiationStrategy;
+	}
+
+	@Override
+	public Object applyBeanPostProcessorsBeforeInitialization(Object existingBean, String beanName)
+			throws BeansException {
+		Object result = existingBean;
+		for (BeanPostProcessor processor : getBeanPostProcessors()) {
+			Object current = processor.postProcessBeforeInitialization(result, beanName);
+			if (null == current)
+				return result;
+			result = current;
+		}
+		return result;
+	}
+
+	@Override
+	public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName)
+			throws BeansException {
+		Object result = existingBean;
+		for (BeanPostProcessor processor : getBeanPostProcessors()) {
+			Object current = processor.postProcessAfterInitialization(result, beanName);
+			if (null == current)
+				return result;
+			result = current;
+		}
+		return result;
 	}
 }
