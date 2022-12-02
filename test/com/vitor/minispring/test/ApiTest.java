@@ -11,6 +11,7 @@ import com.vitor.minispring.beans.factory.config.BeanDefinition;
 import com.vitor.minispring.beans.factory.config.BeanReference;
 import com.vitor.minispring.beans.factory.support.DefaultListableBeanFactory;
 import com.vitor.minispring.beans.factory.support.XmlBeanDefinitionReader;
+import com.vitor.minispring.context.support.ClassPathXmlApplicationContext;
 import com.vitor.minispring.core.io.DefaultResourceLoader;
 import com.vitor.minispring.core.io.Resource;
 import com.vitor.minispring.core.io.ResourceLoader;
@@ -61,13 +62,20 @@ public class ApiTest {
 	}
 
 	@Test
-	public void test_xml() throws IOException {
-		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
-		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
-		reader.loadBeanDefinition("classpath:spring.xml");
+	public void test_nppxml() throws IOException {
+		ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring_npp.xml");
 
-		UserService userService = beanFactory.getBean("userService", UserService.class);
-		userService.queryUserInfo();
+		UserService userService = applicationContext.getBean("userService", UserService.class);
+		String result = userService.queryUserInfo();
+		System.out.println(result);
 	}
 
+	@Test
+	public void test_xml() throws IOException {
+		ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
+
+		UserService userService = applicationContext.getBean("userService", UserService.class);
+		String result = userService.queryUserInfo();
+		System.out.println(result);
+	}
 }

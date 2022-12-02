@@ -9,9 +9,4 @@
         <property name="company" value="Tesla" />
         <property name="location" value="US" />
     </bean>
-
-    <bean
-        class="com.vitor.minispring.test.common.MyBeanFactoryPostProcessor" />
-    <bean
-        class="com.vitor.minispring.test.common.MyBeanPostProcessor" />
 </beans>

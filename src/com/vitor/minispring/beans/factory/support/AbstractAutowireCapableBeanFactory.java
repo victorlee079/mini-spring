@@ -21,12 +21,24 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		try {
 			bean = createBeanInstance(beanDefinition, beanName, args);
 			applyPropertyValues(beanName, bean, beanDefinition);
+			bean = initializeBean(beanName, bean, beanDefinition);
 		} catch (Exception e) {
 			throw new BeansException("Instantiation of bean failed", e);
 		}
 
 		addSingleton(beanName, bean);
 		return bean;
+	}
+
+	private Object initializeBean(String beanName, Object bean, BeanDefinition beanDefinition) {
+		Object wrappedBean = applyBeanPostProcessorsBeforeInitialization(bean, beanName);
+		invokeInitMethods(beanName, wrappedBean, beanDefinition);
+		wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
+		return wrappedBean;
+	}
+
+	private void invokeInitMethods(String beanName, Object wrappedBean, BeanDefinition beanDefinition) {
+
 	}
 
 	protected void applyPropertyValues(String beanName, Object bean, BeanDefinition beanDefinition) {
