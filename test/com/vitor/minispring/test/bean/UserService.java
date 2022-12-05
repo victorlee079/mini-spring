@@ -1,6 +1,9 @@
 package com.vitor.minispring.test.bean;
 
-public class UserService {
+import com.vitor.minispring.beans.factory.DisposableBean;
+import com.vitor.minispring.beans.factory.InitializingBean;
+
+public class UserService implements InitializingBean, DisposableBean {
 	private String uId;
 	private UserDao userDao;
 	private String company;
@@ -48,5 +51,15 @@ public class UserService {
 
 	public void setLocation(String location) {
 		this.location = location;
+	}
+
+	@Override
+	public void destroy() throws Exception {
+		System.out.println("UserService.destroy");
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		System.out.println("UserService.afterPropertiesSet");
 	}
 }

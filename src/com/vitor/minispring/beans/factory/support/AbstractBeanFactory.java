@@ -7,7 +7,6 @@ import com.vitor.minispring.beans.BeansException;
 import com.vitor.minispring.beans.factory.config.BeanDefinition;
 import com.vitor.minispring.beans.factory.config.BeanPostProcessor;
 import com.vitor.minispring.beans.factory.config.ConfigurableBeanFactory;
-import com.vitor.minispring.beans.factory.config.DefaultSingletonBeanRegistry;
 
 public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements ConfigurableBeanFactory {
 
