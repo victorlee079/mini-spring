@@ -7,8 +7,11 @@ import com.vitor.minispring.beans.BeansException;
 import com.vitor.minispring.beans.factory.config.BeanDefinition;
 import com.vitor.minispring.beans.factory.config.BeanPostProcessor;
 import com.vitor.minispring.beans.factory.config.ConfigurableBeanFactory;
+import com.vitor.minispring.utils.ClassUtils;
 
 public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements ConfigurableBeanFactory {
+
+	private ClassLoader beanClassLoader = ClassUtils.getDefaultClassLoader();
 
 	private final List<BeanPostProcessor> beanPostProcessors = new ArrayList<BeanPostProcessor>();
 
@@ -51,5 +54,9 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
 
 	public List<BeanPostProcessor> getBeanPostProcessors() {
 		return this.beanPostProcessors;
+	}
+
+	public ClassLoader getBeanClassLoader() {
+		return beanClassLoader;
 	}
 }
