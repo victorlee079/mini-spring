@@ -6,6 +6,10 @@ import java.lang.reflect.Method;
 import com.vitor.minispring.beans.BeansException;
 import com.vitor.minispring.beans.PropertyValue;
 import com.vitor.minispring.beans.PropertyValues;
+import com.vitor.minispring.beans.factory.Aware;
+import com.vitor.minispring.beans.factory.BeanClassLoaderAware;
+import com.vitor.minispring.beans.factory.BeanFactoryAware;
+import com.vitor.minispring.beans.factory.BeanNameAware;
 import com.vitor.minispring.beans.factory.DisposableBean;
 import com.vitor.minispring.beans.factory.InitializingBean;
 import com.vitor.minispring.beans.factory.config.BeanDefinition;
@@ -41,6 +45,18 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	}
 
 	private Object initializeBean(String beanName, Object bean, BeanDefinition beanDefinition) {
+		if (bean instanceof Aware) {
+			if (bean instanceof BeanFactoryAware) {
+				((BeanFactoryAware) bean).setBeanFactory(this);
+			}
+			if (bean instanceof BeanClassLoaderAware) {
+				((BeanClassLoaderAware) bean).setBeanClassLoader(getBeanClassLoader());
+			}
+			if (bean instanceof BeanNameAware) {
+				((BeanNameAware) bean).setBeanName(beanName);
+			}
+		}
+		
 		Object wrappedBean = applyBeanPostProcessorsBeforeInitialization(bean, beanName);
 		try {
 			invokeInitMethods(beanName, wrappedBean, beanDefinition);

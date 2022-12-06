@@ -1,9 +1,17 @@
 package com.vitor.minispring.test.bean;
 
-import com.vitor.minispring.beans.factory.DisposableBean;
-import com.vitor.minispring.beans.factory.InitializingBean;
+import com.vitor.minispring.beans.BeansException;
+import com.vitor.minispring.beans.factory.BeanClassLoaderAware;
+import com.vitor.minispring.beans.factory.BeanFactory;
+import com.vitor.minispring.beans.factory.BeanFactoryAware;
+import com.vitor.minispring.beans.factory.BeanNameAware;
+import com.vitor.minispring.context.ApplicationContext;
+import com.vitor.minispring.context.ApplicationContextAware;
 
-public class UserService implements InitializingBean, DisposableBean {
+public class UserService implements BeanNameAware, BeanClassLoaderAware, ApplicationContextAware, BeanFactoryAware {
+	private ApplicationContext applicationContext;
+	private BeanFactory beanFactory;
+
 	private String uId;
 	private UserDao userDao;
 	private String company;
@@ -54,12 +62,30 @@ public class UserService implements InitializingBean, DisposableBean {
 	}
 
 	@Override
-	public void destroy() throws Exception {
-		System.out.println("UserService.destroy");
+	public void setBeanName(String name) {
+		System.out.println("Bean Name is:" + name);
 	}
 
 	@Override
-	public void afterPropertiesSet() throws Exception {
-		System.out.println("UserService.afterPropertiesSet");
+	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+		this.beanFactory = beanFactory;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
+
+	@Override
+	public void setBeanClassLoader(ClassLoader classLoader) {
+		System.out.println("ClassLoader:" + classLoader);
+	}
+
+	public ApplicationContext getApplicationContext() {
+		return applicationContext;
+	}
+
+	public BeanFactory getBeanFactory() {
+		return beanFactory;
 	}
 }
