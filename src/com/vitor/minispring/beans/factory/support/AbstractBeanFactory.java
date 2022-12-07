@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vitor.minispring.beans.BeansException;
+import com.vitor.minispring.beans.factory.FactoryBean;
 import com.vitor.minispring.beans.factory.config.BeanDefinition;
 import com.vitor.minispring.beans.factory.config.BeanPostProcessor;
 import com.vitor.minispring.beans.factory.config.ConfigurableBeanFactory;
 import com.vitor.minispring.utils.ClassUtils;
 
-public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements ConfigurableBeanFactory {
+public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport implements ConfigurableBeanFactory {
 
 	private ClassLoader beanClassLoader = ClassUtils.getDefaultClassLoader();
 
@@ -33,12 +34,27 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
 
 	@SuppressWarnings("unchecked")
 	protected <T> T doGetBean(String beanName, Object[] args) {
-		Object bean = getSingleton(beanName);
-		if (bean != null) {
-			return (T) bean;
+		Object sharedInstance = getSingleton(beanName);
+		if (sharedInstance != null) {
+			return (T) getObjectForBeanInstance(sharedInstance, beanName);
 		}
 
-		return (T) createBean(beanName, getBeanDefinition(beanName), args);
+		Object bean = (T) createBean(beanName, getBeanDefinition(beanName), args);
+		return (T) getObjectForBeanInstance(bean, beanName);
+	}
+
+	private Object getObjectForBeanInstance(Object beanInstance, String beanName) {
+		if (!(beanInstance instanceof FactoryBean)) {
+			return beanInstance;
+		}
+
+		Object object = getCachedObjectForFactoryBean(beanName);
+		if (object == null) {
+			FactoryBean<?> factoryBean = (FactoryBean<?>) beanInstance;
+			object = getObjectFromFactoryBean(factoryBean, beanName);
+		}
+
+		return object;
 	}
 
 	protected abstract BeanDefinition getBeanDefinition(String beanName) throws BeansException;
