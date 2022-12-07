@@ -13,7 +13,7 @@ public class UserService implements BeanNameAware, BeanClassLoaderAware, Applica
 	private BeanFactory beanFactory;
 
 	private String uId;
-	private UserDao userDao;
+	private IUserDao userDao;
 	private String company;
 	private String location;
 
@@ -29,11 +29,11 @@ public class UserService implements BeanNameAware, BeanClassLoaderAware, Applica
 		this.uId = uId;
 	}
 
-	public UserDao getUserDao() {
+	public IUserDao getUserDao() {
 		return userDao;
 	}
 
-	public void setUserDao(UserDao userDao) {
+	public void setUserDao(IUserDao userDao) {
 		this.userDao = userDao;
 	}
 
