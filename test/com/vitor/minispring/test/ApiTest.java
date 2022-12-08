@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import com.vitor.minispring.context.support.ClassPathXmlApplicationContext;
 import com.vitor.minispring.test.bean.UserService;
+import com.vitor.minispring.test.event.CustomEvent;
 
 public class ApiTest {
 	@Test
@@ -25,5 +26,13 @@ public class ApiTest {
 		// 2. 调用代理方法
 		UserService userService = applicationContext.getBean("userService", UserService.class);
 		System.out.println("测试结果：" + userService.queryUserInfo());
+	}
+
+	@Test
+	public void test_event() {
+		ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext(
+				"classpath:spring_event.xml");
+		applicationContext.publishEvent(new CustomEvent(applicationContext, 1019129009086763L, "Success~"));
+		applicationContext.registerShutdownHook();
 	}
 }
