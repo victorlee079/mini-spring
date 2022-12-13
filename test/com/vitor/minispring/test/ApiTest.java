@@ -1,8 +1,5 @@
 package com.vitor.minispring.test;
 
-import java.lang.reflect.Method;
-
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vitor.minispring.aop.AdvisedSupport;
@@ -49,12 +46,10 @@ public class ApiTest {
 
 	@Test
 	public void test_aop() throws NoSuchMethodException, SecurityException {
-		AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut(
-				"execution(* com.vitor.minispring.test.bean.UserService.*(..))");
-		Class<UserService> clazz = UserService.class;
-		Method method = clazz.getDeclaredMethod("queryUserInfo");
-		Assert.assertTrue(pointcut.matches(clazz));
-		Assert.assertTrue(pointcut.matches(method, clazz));
+		ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext(
+				"classpath:spring_aop.xml");
+		IUserService userService = applicationContext.getBean("userService", IUserService.class);
+		System.out.println(userService.queryUserInfo());
 	}
 
 	@Test

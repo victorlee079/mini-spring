@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+    <bean id="userService"
+        class="com.vitor.minispring.test.bean.AopUserService" />
+    <bean
+        class="com.vitor.minispring.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
+    <bean id="beforeAdvice"
+        class="com.vitor.minispring.test.bean.UserServiceBeforeAdvice" />
+    <bean id="methodInterceptor"
+        class="com.vitor.minispring.aop.framework.adapter.MethodBeforeAdviceInterceptor">
+        <property name="advice" ref="beforeAdvice" />
+    </bean>
+    <bean id="pointcutAdvisor"
+        class="com.vitor.minispring.aop.aspectj.AspectJExpressionPointcutAdvisor">
+        <property name="expression"
+            value="execution(* com.vitor.minispring.test.bean.IUserService.*(..))" />
+        <property name="advice" ref="methodInterceptor" />
+    </bean>
+</beans>
