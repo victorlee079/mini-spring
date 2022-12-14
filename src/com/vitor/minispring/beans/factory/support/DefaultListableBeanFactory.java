@@ -49,4 +49,9 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		beanDefinitionMap.keySet().forEach(this::getBean);
 	}
 
+	@Override
+	public boolean containsBeanDefinition(String beanName) {
+		return beanDefinitionMap.containsKey(beanName);
+	}
+
 }
