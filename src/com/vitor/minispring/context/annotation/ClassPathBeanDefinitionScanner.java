@@ -2,6 +2,7 @@ package com.vitor.minispring.context.annotation;
 
 import java.util.Set;
 
+import com.vitor.minispring.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import com.vitor.minispring.beans.factory.config.BeanDefinition;
 import com.vitor.minispring.beans.factory.support.BeanDefinitionRegistry;
 
@@ -25,6 +26,10 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 				registry.registerBeanDefinition(determineBeanName(beanDefinition), beanDefinition);
 			}
 		}
+
+		registry.registerBeanDefinition(
+				"com.vitor.minispring.beans.factory.annotation.internalAutowiredAnnotationProcessor",
+				new BeanDefinition(AutowiredAnnotationBeanPostProcessor.class));
 	}
 
 	private String determineBeanName(BeanDefinition beanDefinition) {

@@ -3,22 +3,17 @@ package com.vitor.minispring.test.bean;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.vitor.minispring.context.annotation.Component;
+
+@Component
 public class UserDao {
 	private static Map<String, String> hashMap = new HashMap<>();
 
-	public void initDataMethod() {
-		System.out.println("init-method");
-		hashMap.put("10001", "Aiden");
-		hashMap.put("10002", "Marcus");
-		hashMap.put("10003", "Evelyn");
+	static {
+		hashMap.put("10001", "Hello World");
 	}
 
-	public void destroyDataMethod() {
-		System.out.println("detroy-method");
-		hashMap.clear();
-	}
-
-	public String queryUserName(String uid) {
-		return hashMap.get(uid);
+	public String queryUserName(String uId) {
+		return hashMap.get(uId);
 	}
 }

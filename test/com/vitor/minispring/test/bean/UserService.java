@@ -1,91 +1,46 @@
 package com.vitor.minispring.test.bean;
 
-import com.vitor.minispring.beans.BeansException;
-import com.vitor.minispring.beans.factory.BeanClassLoaderAware;
-import com.vitor.minispring.beans.factory.BeanFactory;
-import com.vitor.minispring.beans.factory.BeanFactoryAware;
-import com.vitor.minispring.beans.factory.BeanNameAware;
-import com.vitor.minispring.context.ApplicationContext;
-import com.vitor.minispring.context.ApplicationContextAware;
+import java.util.Random;
 
-public class UserService implements BeanNameAware, BeanClassLoaderAware, ApplicationContextAware, BeanFactoryAware {
-	private ApplicationContext applicationContext;
-	private BeanFactory beanFactory;
+import com.vitor.minispring.beans.factory.annotation.Autowired;
+import com.vitor.minispring.beans.factory.annotation.Value;
+import com.vitor.minispring.context.annotation.Component;
 
-	private String uId;
-	private IUserDao userDao;
-	private String company;
-	private String location;
+@Component
+public class UserService implements IUserService {
+	@Value("${token}")
+	private String token;
+
+	@Autowired
+	private UserDao userDao;
 
 	public String queryUserInfo() {
-		return userDao.queryUserName(uId) + "," + company + "," + location;
+		try {
+			Thread.sleep(new Random(1).nextInt(100));
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return userDao.queryUserName("10001") + "'" + token;
 	}
 
-	public String getUId() {
-		return uId;
+	public String getToken() {
+		return token;
 	}
 
-	public void setUId(String uId) {
-		this.uId = uId;
+	public void setToken(String token) {
+		this.token = token;
 	}
 
-	public IUserDao getUserDao() {
+	public UserDao getUserDao() {
 		return userDao;
 	}
 
-	public void setUserDao(IUserDao userDao) {
+	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
 	}
 
-	public String getuId() {
-		return uId;
-	}
-
-	public void setuId(String uId) {
-		this.uId = uId;
-	}
-
-	public String getCompany() {
-		return company;
-	}
-
-	public void setCompany(String company) {
-		this.company = company;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
 	@Override
-	public void setBeanName(String name) {
-		System.out.println("Bean Name is:" + name);
-	}
-
-	@Override
-	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-		this.beanFactory = beanFactory;
-	}
-
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext = applicationContext;
-	}
-
-	@Override
-	public void setBeanClassLoader(ClassLoader classLoader) {
-		System.out.println("ClassLoader:" + classLoader);
-	}
-
-	public ApplicationContext getApplicationContext() {
-		return applicationContext;
-	}
-
-	public BeanFactory getBeanFactory() {
-		return beanFactory;
+	public String register(String userName) {
+		return userName;
 	}
 }
