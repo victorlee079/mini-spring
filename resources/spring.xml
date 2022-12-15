@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans>
-    <bean id="userDao"
-        class="com.vitor.minispring.test.bean.UserDao"
-        init-method="initDataMethod" destroy-method="destroyDataMethod" />
-    <bean id="userService"
-        class="com.vitor.minispring.test.bean.UserService"
-        scope="prototype">
-        <property name="uId" value="10001" />
-        <property name="userDao" ref="proxyUserDao" />
-        <property name="company" value="Tesla" />
-        <property name="location" value="US" />
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+             http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/context">
+    <bean
+        class="com.vitor.minispring.beans.factory.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:token.properties" />
     </bean>
 
-    <bean id="proxyUserDao"
-        class="com.vitor.minispring.test.bean.ProxyBeanFactory" />
-
-    <bean
-        class="com.vitor.minispring.test.common.MyBeanFactoryPostProcessor" />
-    <bean
-        class="com.vitor.minispring.test.common.MyBeanPostProcessor" />
+    <context:component-scan
+        base-package="com.vitor.minispring.test.bean" />
 </beans>
