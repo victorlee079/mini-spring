@@ -9,8 +9,11 @@ import com.vitor.minispring.beans.factory.config.BeanDefinition;
 import com.vitor.minispring.beans.factory.config.BeanPostProcessor;
 import com.vitor.minispring.beans.factory.config.ConfigurableBeanFactory;
 import com.vitor.minispring.utils.ClassUtils;
+import com.vitor.minispring.utils.StringValueResolver;
 
 public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport implements ConfigurableBeanFactory {
+
+	private final List<StringValueResolver> embeddedValueResolvers = new ArrayList<>();
 
 	private ClassLoader beanClassLoader = ClassUtils.getDefaultClassLoader();
 
@@ -74,5 +77,19 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	public ClassLoader getBeanClassLoader() {
 		return beanClassLoader;
+	}
+
+	@Override
+	public void addEmbeddedValueResolver(StringValueResolver valueResolver) {
+		this.embeddedValueResolvers.add(valueResolver);
+	}
+
+	@Override
+	public String resolveEmbeddedValue(String value) {
+		String result = value;
+		for (StringValueResolver resolver : this.embeddedValueResolvers) {
+			result = resolver.resolveStringValue(value);
+		}
+		return result;
 	}
 }
