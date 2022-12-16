@@ -6,4 +6,6 @@ public interface IUserService {
 
 	String register(String userName);
 
+	String getToken();
+
 }
