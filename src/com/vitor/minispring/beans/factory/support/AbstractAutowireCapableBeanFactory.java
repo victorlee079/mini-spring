@@ -16,9 +16,11 @@ import com.vitor.minispring.beans.factory.config.BeanDefinition;
 import com.vitor.minispring.beans.factory.config.BeanPostProcessor;
 import com.vitor.minispring.beans.factory.config.BeanReference;
 import com.vitor.minispring.beans.factory.config.InstantiationAwareBeanPostProcessor;
+import com.vitor.minispring.core.convert.ConversionService;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.TypeUtil;
 
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory
 		implements AutowireCapableBeanFactory {
@@ -186,6 +188,15 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				if (value instanceof BeanReference) {
 					BeanReference beanReference = (BeanReference) value;
 					value = getBean(beanReference.getBeanName());
+				} else {
+					Class<?> sourceType = value.getClass();
+					Class<?> targetType = (Class<?>) TypeUtil.getFieldType(bean.getClass(), name);
+					ConversionService conversionService = getConversionService();
+					if (conversionService != null) {
+						if (conversionService.canConvert(sourceType, targetType)) {
+							value = conversionService.convert(value, targetType);
+						}
+					}
 				}
 
 				// From hutool

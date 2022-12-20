@@ -8,6 +8,7 @@ import com.vitor.minispring.beans.factory.FactoryBean;
 import com.vitor.minispring.beans.factory.config.BeanDefinition;
 import com.vitor.minispring.beans.factory.config.BeanPostProcessor;
 import com.vitor.minispring.beans.factory.config.ConfigurableBeanFactory;
+import com.vitor.minispring.core.convert.ConversionService;
 import com.vitor.minispring.utils.ClassUtils;
 import com.vitor.minispring.utils.StringValueResolver;
 
@@ -18,6 +19,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	private ClassLoader beanClassLoader = ClassUtils.getDefaultClassLoader();
 
 	private final List<BeanPostProcessor> beanPostProcessors = new ArrayList<BeanPostProcessor>();
+
+	private ConversionService conversionService;
 
 	@Override
 	public Object getBean(String beanName) throws BeansException {
@@ -92,4 +95,21 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		}
 		return result;
 	}
+
+	@Override
+	public void setConversionService(ConversionService conversionService) {
+		this.conversionService = conversionService;
+	}
+
+	@Override
+	public ConversionService getConversionService() {
+		return conversionService;
+	}
+
+	@Override
+	public boolean containsBean(String name) {
+		return containsBeanDefinition(name);
+	}
+
+	protected abstract boolean containsBeanDefinition(String beanName);
 }
