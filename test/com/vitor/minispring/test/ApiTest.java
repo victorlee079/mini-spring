@@ -33,4 +33,11 @@ public class ApiTest {
 		System.out.println("老公的媳妇：" + husband.queryWife());
 		System.out.println("媳妇的老公：" + wife.queryHusband());
 	}
+
+	@Test
+	public void test_convert() {
+		ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring-converter.xml");
+		Husband husband = applicationContext.getBean("husband", Husband.class);
+		System.out.println("测试结果：" + husband);
+	}
 }
