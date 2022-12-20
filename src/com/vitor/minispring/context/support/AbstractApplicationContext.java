@@ -14,6 +14,7 @@ import com.vitor.minispring.context.event.ApplicationEventMulticaster;
 import com.vitor.minispring.context.event.ContextClosedEvent;
 import com.vitor.minispring.context.event.ContextRefreshedEvent;
 import com.vitor.minispring.context.event.SimpleApplicationEventMulticaster;
+import com.vitor.minispring.core.convert.ConversionService;
 import com.vitor.minispring.core.io.DefaultResourceLoader;
 
 /**
@@ -45,9 +46,20 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		registerListeners();
 
-		beanFactory.preInstantiateSingletons();
+		finishBeanFactoryInitialization(beanFactory);
 
 		finishRefresh();
+	}
+
+	private void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
+		if (beanFactory.containsBean("conversionService")) {
+			Object conversionService = beanFactory.getBean("conversionService");
+			if (conversionService instanceof ConversionService) {
+				beanFactory.setConversionService((ConversionService) conversionService);
+			}
+		}
+
+		beanFactory.preInstantiateSingletons();
 	}
 
 	private void finishRefresh() {
@@ -131,5 +143,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	public void close() {
 		publishEvent(new ContextClosedEvent(this));
 		getBeanFactory().destroySingletons();
+	}
+
+	@Override
+	public boolean containsBean(String name) {
+		return getBeanFactory().containsBean(name);
 	}
 }

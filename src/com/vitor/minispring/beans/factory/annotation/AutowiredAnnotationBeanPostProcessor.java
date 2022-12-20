@@ -8,9 +8,11 @@ import com.vitor.minispring.beans.factory.BeanFactory;
 import com.vitor.minispring.beans.factory.BeanFactoryAware;
 import com.vitor.minispring.beans.factory.config.ConfigurableBeanFactory;
 import com.vitor.minispring.beans.factory.config.InstantiationAwareBeanPostProcessor;
+import com.vitor.minispring.core.convert.ConversionService;
 import com.vitor.minispring.utils.ClassUtils;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.TypeUtil;
 
 public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareBeanPostProcessor, BeanFactoryAware {
 
@@ -51,8 +53,18 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
 		for (Field field : declaredFields) {
 			Value valueAnnotation = field.getAnnotation(Value.class);
 			if (null != valueAnnotation) {
-				String value = valueAnnotation.value();
-				value = beanFactory.resolveEmbeddedValue(value);
+				Object value = valueAnnotation.value();
+				value = beanFactory.resolveEmbeddedValue((String) value);
+
+				Class<?> sourceType = value.getClass();
+				Class<?> targetType = (Class<?>) TypeUtil.getType(field);
+				ConversionService conversionService = beanFactory.getConversionService();
+				if (conversionService != null) {
+					if (conversionService.canConvert(sourceType, targetType)) {
+						value = conversionService.convert(value, targetType);
+					}
+				}
+
 				BeanUtil.setFieldValue(bean, field.getName(), value);
 			}
 		}
